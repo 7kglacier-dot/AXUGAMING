@@ -241,11 +241,11 @@
     <section id="view-home" class="view-section active">
         <div class="game-card">
             <div class="logo-container">
-                <div class="logo-placeholder">LOGO</div>
+                <div class="logo-placeholder">AXU GAMING</div>
             </div>
-            <h1 class="product-title" id="display-title">Premium Gaming Pass</h1>
+            <h1 class="product-title" id="display-title">AXU 4.4 PAID FILE </h1>
             <p class="product-desc" id="display-desc">Get instant access to private servers, premium mods, and exclusive rewards.</p>
-            <div class="price-tag" id="display-price">$19.99</div>
+            <div class="price-tag" id="display-price">₹499</div>
             <button class="btn" onclick="navigateTo('view-payment'); startTimer();">Buy Now</button>
         </div>
     </section>
@@ -254,20 +254,15 @@
         <div class="game-card">
             <div class="timer-box" id="timer">05:00</div>
             <h3>Complete Payment</h3>
-            <p class="product-desc" style="margin-bottom: 15px;">Scan QR code to pay.</p>
+            <p class="product-desc" style="margin-bottom: 15px;">Scan QR code using GPay, PhonePe or Paytm to pay.</p>
+            
             <div class="qr-placeholder">
-                <svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0H40V40H0V0ZM10 10V30H30V10H10Z" fill="#141622"/>
-                    <path d="M60 0H100V40H60V0ZM70 10V30H90V10H70Z" fill="#141622"/>
-                    <path d="M0 60H40V100H0V60ZM10 70V90H30V70H10Z" fill="#141622"/>
-                    <path d="M60 60H80V80H60V60Z" fill="#141622"/>
-                    <path d="M80 80H100V100H80V80Z" fill="#141622"/>
-                    <circle cx="50" cy="50" r="10" fill="#9d4edd"/>
-                </svg>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi%3A%2F%2Fpay%3Fpa%3Dikram.5%40superyes%26pn%3DAXUGAMING" alt="UPI QR Code" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
+
             <div class="input-group">
                 <label for="utr-input">UTR / Transaction ID</label>
-                <input type="text" id="utr-input" class="input-field" placeholder="Enter transaction ID">
+                <input type="text" id="utr-input" class="input-field" placeholder="Enter 12-digit transaction ID">
             </div>
             <button class="btn" onclick="submitPayment()">Submit Transaction</button>
         </div>
@@ -284,13 +279,16 @@
     </section>
 
     <script>
+        /* ==========================================
+           YAHAN SE AAP KUCH BHI EDIT KAR SAKTE HAIN
+           ========================================== */
         const CONFIG = {
-            productTitle: "Cyber Strike Pass",
-            productPrice: "₹250",
-            productDescription: "Unlock all premium tier weapons, neon skins, and access 24/7 priority queues.",
-            telegramURL: "https://t.me/placeholder_link",
-            countdownMinutes: 5,
-            autoRedirectDelaySeconds: 5
+            productTitle: "AXU GAMING 4.4 PAID FILE ",         // Website par product ka naam
+            productPrice: "₹499",                        // Jo price dikhana hai
+            productDescription: "PAYMENT WILL GET REFUND IN 15 TO 30 MINS SO DONT WARRY AND DONT TAKE STRESS.", // Product details
+            telegramURL: "https://t.me/+jKHplpoVI9YzNzg1", // Apna asli Telegram Group ka link yahan daalein
+            countdownMinutes: 5,                          // Payment timer (Minutes me)
+            autoRedirectDelaySeconds: 5                   // Success ke baad kitne second me Telegram khule
         };
 
         document.getElementById('display-title').innerText = CONFIG.productTitle;
@@ -336,7 +334,7 @@
         function submitPayment() {
             const utrInput = document.getElementById('utr-input').value.trim();
             if (!utrInput) {
-                alert("Please enter Transaction ID.");
+                alert("Please enter Transaction ID / UTR.");
                 return;
             }
             clearInterval(timerInterval);
@@ -349,7 +347,7 @@
             const textElement = document.getElementById('redirect-text');
             const redirectInterval = setInterval(() => {
                 countdown--;
-                if(textElement) textElement.innerText = `Redirecting in ${countdown} seconds...`;
+                if(textElement) textElement.innerText = `Redirecting to Telegram in ${countdown} seconds...`;
                 if (countdown <= 0) {
                     clearInterval(redirectInterval);
                     window.location.href = CONFIG.telegramURL;
