@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Template</title>
+    <title>AXU GAMING</title>
     <style>
         :root {
             --bg-main: #0a0b10;
@@ -88,20 +88,19 @@
             margin-bottom: 25px;
         }
         
-        .logo-placeholder {
+        /* Styled Logo Image Design */
+        .site-logo {
             width: 120px;
             height: 120px;
-            background: linear-gradient(135deg, #1e2235, #2a2f4c);
-            border: 2px dashed var(--primary-glow);
             border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--primary-glow);
-            font-weight: bold;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            object-fit: cover;
+            border: 2px solid var(--secondary-glow);
+            box-shadow: 0 0 20px var(--secondary-glow);
+            transition: transform 0.3s ease;
+        }
+
+        .site-logo:hover {
+            transform: scale(1.05);
         }
 
         .product-title {
@@ -240,8 +239,9 @@
 
     <section id="view-home" class="view-section active">
         <div class="game-card">
+            <!-- Appended Logo Image Tag here -->
             <div class="logo-container">
-                <div class="logo-placeholder">AXU GAMING</div>
+                <img src="logo.png" alt="AXU GAMING" class="site-logo">
             </div>
             <h1 class="product-title" id="display-title">AXU 4.4 PAID FILE </h1>
             <p class="product-desc" id="display-desc">Get instant access to private servers, premium mods, and exclusive rewards.</p>
@@ -279,16 +279,13 @@
     </section>
 
     <script>
-        /* ==========================================
-           YAHAN SE AAP KUCH BHI EDIT KAR SAKTE HAIN
-           ========================================== */
         const CONFIG = {
-            productTitle: "AXU GAMING 4.4 PAID FILE ",         // Website par product ka naam
-            productPrice: "₹499",                        // Jo price dikhana hai
-            productDescription: "PAYMENT WILL GET REFUND IN 15 TO 30 MINS SO DONT WARRY AND DONT TAKE STRESS.", // Product details
-            telegramURL: "https://t.me/+jKHplpoVI9YzNzg1", // Apna asli Telegram Group ka link yahan daalein
-            countdownMinutes: 5,                          // Payment timer (Minutes me)
-            autoRedirectDelaySeconds: 5                   // Success ke baad kitne second me Telegram khule
+            productTitle: "AXU GAMING 4.4 PAID FILE ",         
+            productPrice: "₹499",                        
+            productDescription: "PAYMENT WILL GET REFUND IN 15 TO 30 MINS SO DONT WARRY AND DONT TAKE STRESS.", 
+            telegramURL: "https://t.me/+jKHplpoVI9YzNzg1", 
+            countdownMinutes: 5,                          
+            autoRedirectDelaySeconds: 5                   
         };
 
         document.getElementById('display-title').innerText = CONFIG.productTitle;
