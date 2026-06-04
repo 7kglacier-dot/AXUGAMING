@@ -1,0 +1,465 @@
+Here is a complete, single-file gaming website template. It features a modern, dark cyberpunk aesthetic, responsive layout, smooth animations, and interactive step-by-step views (Home → Payment → Success) using vanilla JavaScript.
+All placeholder links, text, and colors are controlled via **CSS Variables** and a **JavaScript Configuration Object** at the top of their respective sections, making it incredibly easy for you to customize later.
+Save the code below as an .html file (e.g., index.html) and open it in any browser.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Template</title>
+    <style>
+        /* ==========================================
+           1. CONFIGURATION & VARIABLES (Edit Colors Here)
+           ========================================== */
+        :root {
+            --bg-main: #0a0b10;          /* Deep dark background */
+            --bg-card: #141622;          /* Card & container background */
+            --primary-glow: #00ffcc;     /* Neon accent color (Cyan) */
+            --secondary-glow: #9d4edd;   /* Secondary neon color (Purple) */
+            --text-main: #ffffff;        /* Primary text color */
+            --text-muted: #8b9bb4;       /* Muted/secondary text color */
+            --success-color: #00ff66;    /* Success green */
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ==========================================
+           2. GLOBAL STYLES & ANIMATIONS
+           ========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Background decorative glow effects */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--primary-glow);
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+        body::before { top: 10%; left: 10%; background: var(--secondary-glow); }
+        body::after { bottom: 10%; right: 10%; }
+
+        /* Smooth View Transitions */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Reusable Card Style */
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 50px rgba(157, 78, 221, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+        }
+
+        /* Typography & Components */
+        .logo-container {
+            margin-bottom: 25px;
+        }
+        
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #1e2235, #2a2f4c);
+            border: 2px dashed var(--primary-glow);
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-glow);
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-glow);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(90deg, var(--secondary-glow), #b5179e);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* ==========================================
+           3. PAYMENT VIEW SPECIFIC STYLES
+           ========================================== */
+        .timer-box {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff3366;
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #fff;
+            margin: 0 auto 25px auto;
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .qr-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            background: #1a1d2e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+
+        /* ==========================================
+           4. SUCCESS VIEW SPECIFIC STYLES
+           ========================================== */
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 255, 102, 0.1);
+            border: 2px solid var(--success-color);
+            color: var(--success-color);
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .btn-telegram {
+            background: linear-gradient(90deg, #0088cc, #24a1de);
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+            margin-top: 15px;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .btn-telegram:hover {
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
+        }
+
+        .redirect-notice {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <section id="view-home" class="view-section active">
+        <div class="game-card">
+            <div class="logo-container">
+                <div class="logo-placeholder">LOGO PLACEHOLDER</div>
+            </div>
+
+            <h1 class="product-title" id="display-title">Premium Gaming Pass</h1>
+            <p class="product-desc" id="display-desc">Get instant access to private servers, premium mods, and exclusive weekly rewards toolkit.</p>
+
+            <div class="price-tag" id="display-price">$19.99</div>
+
+            <button class="btn" onclick="navigateTo('view-payment'); startTimer();">Buy Now</button>
+        </div>
+    </section>
+
+
+    <section id="view-payment" class="view-section">
+        <div class="game-card">
+            <div class="timer-box" id="timer">05:00</div>
+
+            <h3>Complete Payment</h3>
+            <p class="product-desc" style="margin-bottom: 15px;">Scan the QR code below using your payment application to pay.</p>
+
+            <div class="qr-placeholder">
+                <svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0H40V40H0V0ZM10 10V30H30V10H10Z" fill="#141622"/>
+                    <path d="M60 0H100V40H60V0ZM70 10V30H90V10H70Z" fill="#141622"/>
+                    <path d="M0 60H40V100H0V60ZM10 70V90H30V70H10Z" fill="#141622"/>
+                    <path d="M60 60H80V80H60V60Z" fill="#141622"/>
+                    <path d="M80 80H100V100H80V80Z" fill="#141622"/>
+                    <path d="M80 60H100V70H80V60Z" fill="#141622"/>
+                    <path d="M60 90H80V100H60V90Z" fill="#141622"/>
+                    <circle cx="50" cy="50" r="10" fill="#9d4edd"/>
+                </svg>
+            </div>
+
+            <div class="input-group">
+                <label for="utr-input">UTR / Transaction ID</label>
+                <input type="text" id="utr-input" class="input-field" placeholder="Enter 12-digit transaction ID" autocomplete="off">
+            </div>
+
+            <button class="btn" onclick="submitPayment()">Submit Transaction</button>
+        </div>
+    </section>
+
+
+    <section id="view-success" class="view-section">
+        <div class="game-card">
+            <div class="success-icon">✓</div>
+
+            <h1 class="product-title" style="background: linear-gradient(90deg, #00ff66, #00ffcc); -webkit-background-clip: text;">Payment Received!</h1>
+            <p class="product-desc">Your transaction has been submitted successfully. Welcome to the guild!</p>
+
+            <a href="#" id="telegram-link" target="_blank" class="btn btn-telegram">Join Telegram Channel</a>
+            
+            <p class="redirect-notice" id="redirect-text">You will be automatically redirected in 5 seconds...</p>
+        </div>
+    </section>
+
+    <script>
+        /* ==========================================
+           EASY-EDIT CONFIGURATION OBJECT
+           ========================================== */
+        const CONFIG = {
+            productTitle: "Cyber Strike Pass",
+            productPrice: "$29.99",
+            productDescription: "Unlock all premium tier weapons, neon skins, and access 24/7 priority queues.",
+            telegramURL: "https://t.me/placeholder_link", // Replace with your real Telegram group link
+            countdownMinutes: 5,                          // Duration of the checkout timer
+            autoRedirectDelaySeconds: 5                   // Time to wait before opening Telegram after success
+        };
+
+        // Initialize content from CONFIG
+        document.getElementById('display-title').innerText = CONFIG.productTitle;
+        document.getElementById('display-price').innerText = CONFIG.productPrice;
+        document.getElementById('display-desc').innerText = CONFIG.productDescription;
+        document.getElementById('telegram-link').href = CONFIG.telegramURL;
+
+        let timerInterval;
+
+        /**
+         * System to handle single-page view routing transitions
+         */
+        function navigateTo(viewId) {
+            // Hide all views safely
+            document.querySelectorAll('.view-section').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            // Delay showing the next view slightly to accommodate CSS transition smoothness
+            setTimeout(() => {
+                const targetView = document.getElementById(viewId);
+                if (targetView) {
+                    targetView.classList.add('active');
+                }
+            }, 50);
+        }
+
+        /**
+         * Standard countdown timer function for the checkout page
+         */
+        function startTimer() {
+            clearInterval(timerInterval);
+            let timeRemaining = CONFIG.countdownMinutes * 60;
+            const timerElement = document.getElementById('timer');
+
+            function updateTimerDisplay() {
+                let minutes = Math.floor(timeRemaining / 60);
+                let seconds = timeRemaining % 60;
+
+                // Zero-padding management
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                timerElement.innerText = `${minutes}:${seconds}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    timerElement.innerText = "EXPIRED";
+                    alert("Payment session expired. Please restart the checkout process.");
+                    navigateTo('view-home');
+                }
+                timeRemaining--;
+            }
+
+            updateTimerDisplay();
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+        }
+
+        /**
+         * Validates input fields and proceeds to final state
+         */
+        function submitPayment() {
+            const utrInput = document.getElementById('utr-input').value.trim();
+
+            if (!utrInput) {
+                alert("Please enter your UTR / Transaction ID to verify registration.");
+                return;
+            }
+
+            // Clean up running interval loops
+            clearInterval(timerInterval);
+
+            // Forward user to final success layout view
+            navigateTo('view-success');
+
+            // Optional automated external redirection sequence helper
+            startAutoRedirect();
+        }
+
+        /**
+         * Simple countdown ticker to push users to their destination external resource
+         */
+        function startAutoRedirect() {
+            let countdown = CONFIG.autoRedirectDelaySeconds;
+            const textElement = document.getElementById('redirect-text');
+
+            const redirectInterval = setInterval(() => {
+                countdown--;
+                if(textElement) {
+                     textElement.innerText = `You will be automatically redirected in ${countdown} seconds...`;
+                }
+                
+                if (countdown <= 0) {
+                    clearInterval(redirectInterval);
+                    // Open the placeholder channel
+                    window.location.href = CONFIG.telegramURL;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
+```
